@@ -5,9 +5,22 @@
 #include <time.h>
 #include <fcntl.h>
 #include <sys\stat.h>
+#include <fstream>
+#include <string>
 #pragma warning(disable : 4996)
 
 using namespace std;
+
+struct students
+{
+	string			first_name;
+	string			second_name;
+	unsigned short	age = 0;
+	unsigned short	height = 0;
+	unsigned short	weight = 0;
+	string			address;
+};
+
 
 int filesDemo()
 {
@@ -211,13 +224,103 @@ void secured_files(const char* filename)
 	_close(fd);
 }
 
+void filestreams()
+{
+	unsigned short N = 1;
+
+	setlocale(0, "Rus");
+
+	cout << "Введите кол-во студентов в группе: ";
+	if (cin >> N)
+	{
+		cout << endl;
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');  // очистка буфера ввода перед считыванием строки с пробелами
+
+		ofstream file1("students.txt", ios::out | ios::trunc | ios::binary);
+		students* st1 = new students[N];
+
+		file1 << N << endl;
+		for (char i = 0; i < N; i++)
+		{
+			cout << "\nИмя: ";
+			getline(cin, st1[i].first_name, '\n');
+			file1 << st1[i].first_name << endl;
+			cout << "\nФамилия: ";
+			getline(cin, st1[i].second_name, '\n');
+			file1 << st1[i].second_name << endl;
+			cout << "\nВозраст: ";
+			cin >> st1[i].age;
+			file1 << st1[i].age << endl;
+			cout << "\nРост: ";
+			cin >> st1[i].height;
+			file1 << st1[i].height << endl;
+			cout << "\nВес: ";
+			cin >> st1[i].weight;
+			file1 << st1[i].weight << endl;
+			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // очистка буфера ввода перед считыванием строки с пробелами
+			cout << "\nАдрес: ";
+			getline(cin, st1[i].address, '\n');
+			file1 << st1[i].address << endl;
+		}
+		file1.close();
+
+		cout << "\n\nReading data from file:\n";
+		ifstream file2("students.txt");
+		file2 >> N;
+		string temp;
+		getline(file2, temp);  // считывание дополнительного разделителя после считанного нестрокового значения
+
+		students* st2 = new students[N];
+
+		for (char i = 0; i < N; i++)
+		{
+			getline(file2, st2[i].first_name);
+			cout << "\nИмя: ";
+			cout << st2[i].first_name;
+			getline(file2, st2[i].second_name);
+			cout << "\nФамилия: ";
+			cout << st2[i].second_name;
+			file2 >> st2[i].age;
+			cout << "\nВозраст: ";
+			cout << st2[i].age;
+			file2 >> st2[i].height;
+			cout << "\nРост: ";
+			cout << st2[i].height;
+			file2 >> st2[i].weight;
+			cout << "\nВес: ";
+			cout << st2[i].weight;
+			getline(file2, temp);  // считывание дополнительного разделителя после считанного нестрокового значения
+			getline(file2, st2[i].address);
+			cout << "\nАдрес: ";
+			cout << st2[i].address;
+			cout << '\n';
+
+			// Проверка достижения конца файла 
+			getline(file2, temp);  // считывание дополнительного разделителя после считанного нестрокового значения
+			if (file2.eof())
+				break;
+			file2.seekg(-2, ios_base::cur);
+		}
+		file2.close();
+
+		cout << endl << endl;
+	}
+	else
+	{
+		cout << "Error input for number N";
+	}
+}
+
 int main()
 {
 	setlocale(0, "ru");
 	cout << filesDemo();
-	// secured_files(".//Debug//copy1.cpp");
-	// array_fill_from_file("numbers_array.txt");
-	// files_secured();
+	secured_files("copy1.cpp");
+	files_secured();
+
+	array_fill_from_file("numbers_array.txt");
+
+
 
 	return 0;
 }
