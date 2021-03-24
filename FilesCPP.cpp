@@ -2,30 +2,33 @@
 #include <iostream>
 #include <conio.h>
 #include <io.h>
+#include <time.h>
 #include <fcntl.h>
 #include <sys\stat.h>
-// #pragma warning(disable : 4996)
+#pragma warning(disable : 4996)
 
 using namespace std;
-/*
+
 int filesDemo()
 {
+	long t1 = time(NULL), t2;
+	cout << t1 << endl;
 	//	clrscr();
 	setlocale(0, "Rus");
 
 	int handle1 = -1, handle2 = -1, nrd = 0, nwr = 0, trd = 0, twr = 0, fsize = 0;
-	const char* name1 = ".//Debug//sourceFile.txt", * name2 = ".//Debug//copy2.cpp";
+	const char* name1 = "arc.zip", * name2 = "arc2.zip", * name3 = "arc3.zip", * name4 = "arc4.zip";
 	char msg[1024] = "";
 
 	// 1st way
-	if ((handle1 = open(name1, O_RDONLY | O_TEXT)) == -1)
+	if ((handle1 = open(name1, O_RDONLY | O_BINARY)) == -1)
 	{
 		perror("Ошибка открытия для чтения файла №1 (исходного)");
 		return 1;
 	}
 	else
 	{
-		if ((handle2 = open(".//Debug//copy1.cpp", O_CREAT | O_WRONLY | O_TRUNC | O_TEXT, S_IREAD | S_IWRITE)) == -1)
+		if ((handle2 = open(name2, O_CREAT | O_WRONLY | O_TRUNC | O_BINARY, S_IREAD | S_IWRITE)) == -1)
 		{
 			perror("Ошибка открытия для записи файла №2 (целевого)");
 			return 2;
@@ -43,14 +46,17 @@ int filesDemo()
 
 			close(handle2);
 
-			printf_s("\n1) Копирование содержимого файла files.txt блоками по 1 кБ (1024 Б) при помощи функции OPEN в файл copy1.cpp\n");
+			printf_s("\n1) Копирование содержимого файла files.txt блоками по 1 кБ (1024 Б) при помощи функции OPEN в файл arc1.zip\n");
 			printf_s("Всего считано:\t\t%10d Б\nВсего записано:\t\t%10d Б\nРазмер файла:\t\t%10d Б\n\n", trd, twr, fsize);
 		}
 		close(handle1);
+		t2 = time(NULL);
+		cout << "1: " << t2 - t1 << endl;
 	}
 
 	// 2nd way
 	FILE* f_in, * f_out;
+	
 	char ch;
 
 	if ((f_in = fopen(name1, "rb")) == NULL)
@@ -60,7 +66,8 @@ int filesDemo()
 	}
 	else
 	{
-		if ((f_out = fopen(name2, "wb")) == NULL)
+		t1 = time(NULL);
+		if ((f_out = fopen(name3, "wb")) == NULL)
 		{
 			perror("Ошибка открытия для записи файла №3 (целевого)");
 			return 4;
@@ -80,20 +87,22 @@ int filesDemo()
 			}
 
 			fclose(f_out);
+			t2 = time(NULL);
+			cout << "2: " << t2 - t1 << endl;
 
-			printf_s("\n2)  Копирование содержимого файла files.txt по 1 символу при помощи функции FOPEN в файл copy2.cpp\n");
+			printf_s("\n2)  Копирование содержимого файла files.txt по 1 символу при помощи функции FOPEN в файл arc2.zip\n");
 			printf_s("Всего записано:\t\t%10d Б\n\n", fsize);
 		}
 
 		// 3rd way
-		name2 = ".//Debug//copy3.cpp";
-		if ((f_out = fopen(name2, "wb")) == NULL)
+		if ((f_out = fopen(name4, "wb")) == NULL)
 		{
 			perror("Ошибка открытия для записи файла №4 (целевого)");
 			return 5;
 		}
 		else
 		{
+			t1 = time(NULL);
 			fsize = 0;
 			fseek(f_in, 0L, SEEK_SET);
 
@@ -108,8 +117,10 @@ int filesDemo()
 
 			fclose(f_in);
 			fclose(f_out);
+			t2 = time(NULL);
+			cout << "3: " << t2 - t1 << endl;
 
-			printf_s("\n3) Копирование файла files.txt по 1 строке при помощи функции FOPEN в файл copy3.cpp\n");
+			printf_s("\n3) Копирование файла по 1 строке при помощи функции FOPEN в файл arc3.zip\n");
 			printf_s("Всего считано:\t\t%10d строк\n\n", fsize);
 		}
 	}
@@ -165,7 +176,7 @@ void files_secured()
 	}
 	return;
 }
-*/
+
 
 int openfile(const char* filename, int flags)
 {
@@ -203,9 +214,9 @@ void secured_files(const char* filename)
 int main()
 {
 	setlocale(0, "ru");
-	// cout << filesDemo();
-	secured_files(".//Debug//copy1.cpp");
-	// array_fill_from_file(".//Debug//numbers_array.txt");
+	cout << filesDemo();
+	// secured_files(".//Debug//copy1.cpp");
+	// array_fill_from_file("numbers_array.txt");
 	// files_secured();
 
 	return 0;

@@ -1,3 +1,4 @@
+// исходный текст
 void files_secured()
 {
 	FILE* f;
